@@ -1,0 +1,18 @@
+
+nó vai ser uma estrutura
+
+node {
+	int interface
+	node *zero; 
+	node *one;
+}
+
+Provavelmente precisamos duma estrutura do tipo grafo com um ponteiro para a raiz da arvore
+e mais alguma info sobre a arvore
+
+recebes uma string.. p exemplo "1011", interface 2, vais criando nodes caracter a caracter
+(para o ponteiro 1 ou 0, consoante o caracter) usando um ciclo com (strlen) iterações
+
+para o caso 1011 ficavas com uma arvore com 4 nós em que um chutava para a interface 2 e 
+os restantes para a interface default (os da interface default mais tarde podem vir a receber
+outra interface)
