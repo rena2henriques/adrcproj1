@@ -1,5 +1,5 @@
 
-n� vai ser uma estrutura
+nó vai ser uma estrutura
 
 node {
 	int interface
@@ -11,8 +11,10 @@ Provavelmente precisamos duma estrutura do tipo grafo com um ponteiro para a rai
 e mais alguma info sobre a arvore
 
 recebes uma string.. p exemplo "1011", interface 2, vais criando nodes caracter a caracter
-(para o ponteiro 1 ou 0, consoante o caracter) usando um ciclo com (strlen) itera��es
+(para o ponteiro 1 ou 0, consoante o caracter) usando um ciclo com (strlen) iterações
 
-para o caso 1011 ficavas com uma arvore com 4 n�s em que um chutava para a interface 2 e 
+para o caso 1011 ficavas com uma arvore com 4 nós em que um chutava para a interface 2 e 
 os restantes para a interface default (os da interface default mais tarde podem vir a receber
 outra interface)
+
+para os proximos, ou o nó ou já existe e a string continua, segues o caminho, ou o nó ja existe e coincidide com o fim da string, aí preenches o atual nó com a interface correta, ou o nó nao existe e crias
