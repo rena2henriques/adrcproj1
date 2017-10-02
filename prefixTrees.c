@@ -93,16 +93,63 @@ struct Node *PrefixTree(int argc, char const *argv[]) {
 }
 
 
-void PrintTable(struct Node *node) {
+void PrintTable(struct Node *root, struct Node *current_node, int binary_value, struct Queue *front, struct Queue * rear) {
 
-	if( node != NULL) {
-		if(node->next_hop != -1){
-			printf("%d", node->next_hop);
-		} else {
-			printf("x");
+	if(current_node != root){
+
+		enq(binary_value, front, rear );
+		if(current_node->next_hop != -1) {
+			display(front, rear);
+			printf(" %d\n", current_node->next_hop);
 		}
-		PrintTable(node->child_zero);
-		PrintTable(node->child_one);
 	}
+
+	if (current_node->child_zero != NULL) {
+		PrintTable(root, current_node->child_zero, 0, front, rear);
+	}
+
+	if (current_node->child_one != NULL) {
+		PrintTable(root, current_node->child_zero, 1, front, rear);
+	}
+	
+	// deq(struct Queue *front, struct Queue *rear);
+
+	return;
+
+
+}
+
+int LookUp(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE], int tree_level) {
+
+
+
+	return current_node->next_hop;
+}
+
+
+
+
+void PrintTable(struct Node *root, struct Node *current_node, int binary_level, char prefix[PREFIXSIZE], int tree_level ) {
+
+	if(current_node != root){
+
+		prefix[tree_level] = binary_value;
+		if(current_node->next_hop != -1) {
+			printf("%s %d\n", prefix, current_node->next_hop);
+		}
+	}
+
+	if (current_node->child_zero != NULL) {
+		PrintTable(root, current_node->child_zero, 0, prefix, ++tree_level);
+	}
+
+	if (current_node->child_one != NULL) {
+		PrintTable(root, current_node->child_zero, 1, prefix, ++tree_level);
+	}
+	
+	prefix[tree_level] = -1;
+
+	return;
+
 
 }

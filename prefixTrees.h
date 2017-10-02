@@ -1,9 +1,11 @@
 #ifndef PREFIX_TREES
 #define PREFIX_TREES
 
+#include <stdlib.h>
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
+#include "Queue.h"
 
 #define PREFIXSIZE 16
 
@@ -17,6 +19,8 @@ struct Node* InsertTree(char prefix[PREFIXSIZE], int next_hop, struct Node* root
 
 struct Node* PrefixTree(int argc, char const *argv[]);
 
-void PrintTable(struct Node *node);
+void PrintTable(struct Node *root, struct Node *current_node, int binary_value, struct Queue *front, struct Queue * rear);
+
+int LookUp(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE], int tree_level);
 
 #endif
