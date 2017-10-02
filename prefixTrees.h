@@ -5,6 +5,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 #define PREFIXSIZE 16
 
@@ -18,8 +19,8 @@ struct Node* InsertTree(char prefix[PREFIXSIZE], int next_hop, struct Node* root
 
 struct Node* PrefixTree(int argc, char const *argv[]);
 
-void PrintTable(struct Node *root, struct Node *current_node, char *binary_level, char prefix[PREFIXSIZE], int *tree_level );
+void PrintTable(struct Node *root, struct Node *current_node, char *binary_level, char aux[PREFIXSIZE], int *tree_level );
 
-int LookUp(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE], int tree_level);
+int LookUp(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE], int *next_hop, int *tree_level);
 
 #endif

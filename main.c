@@ -12,13 +12,20 @@ int main(int argc, char const *argv[])
 
 	int tree_level = -1;
 	char binary_level = '9';
+	int next_hop = -1;
 
 	/* Prefix Tree */
 	struct Node *root = PrefixTree(argc, argv);
 
 	PrintTable(root, root, &binary_level, prefix, &tree_level);
 
+	tree_level = -1;
 	
+	memset(prefix, '\0', sizeof(prefix));
+
+	strcpy(prefix, "101");
+
+	printf("The correspondent next-hop is %d\n", LookUp(root, root, prefix, &next_hop, &tree_level));
 
 	// while(1) {
 
