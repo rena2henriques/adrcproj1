@@ -19,13 +19,20 @@ int main(int argc, char const *argv[])
 
 	PrintTable(root, root, &binary_level, prefix, &tree_level);
 
-	tree_level = -1;
+	tree_level = 0;
 	
 	memset(prefix, '\0', sizeof(prefix));
 
-	strcpy(prefix, "101");
+	// momentary!
+	strcpy(prefix, "0010");
 
-	printf("The correspondent next-hop is %d\n", LookUp(root, root, prefix, &next_hop, &tree_level));
+	next_hop = LookUp(root, root, prefix, &next_hop, &tree_level);
+
+	if (next_hop == -1 ) {
+		printf("There's no available next_hop value for that prefix!\n");
+	} else {
+		printf("The correspondent next-hop is %d\n", next_hop);
+	}
 
 	// while(1) {
 

@@ -100,23 +100,21 @@ int LookUp(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE]
 		}
 	}
 
-	//if ((*tree_level) < strlen(prefix) ) {
+	if ((*tree_level) < strlen(prefix) ) {
 
 		if (current_node->child_zero != NULL && prefix[*tree_level] == '0') {
 			(*tree_level)++;
 			LookUp(root, current_node->child_zero, prefix, next_hop, tree_level);
 		} 
-		else if (current_node->child_one != NULL && prefix[*tree_level] == '1') {
+		else if (current_node->child_one != NULL && prefix[(*tree_level)] == '1') {
 			(*tree_level)++;
 			LookUp(root, current_node->child_one,prefix, next_hop, tree_level);
 
 		}
-	//}
+	}
 
 	return (*next_hop);
 }
-
-
 
 
 void PrintTable(struct Node *root, struct Node *current_node, char *binary_level, char aux[PREFIXSIZE], int *tree_level ) {
@@ -143,7 +141,6 @@ void PrintTable(struct Node *root, struct Node *current_node, char *binary_level
 	
 	aux[(*tree_level)] = '\0';
 	(*tree_level)--;
-
 
 	return;
 }
