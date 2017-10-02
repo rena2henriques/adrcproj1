@@ -148,10 +148,12 @@ void PrintTable(struct Node *root, struct Node *current_node, char *binary_level
 	if (current_node->child_one != NULL) {
 		(*tree_level)++;
 		(*binary_level) = '1';
-		PrintTable(root, current_node->child_zero, binary_level, prefix, tree_level);
+		PrintTable(root, current_node->child_one, binary_level, prefix, tree_level);
 	}
 	
-	prefix[(*tree_level)] = '9';
+	prefix[(*tree_level)] = '\0';
+	(*tree_level)--;
+
 
 	return;
 }
