@@ -23,4 +23,6 @@ void PrintTable(struct Node *root, struct Node *current_node, char *binary_level
 
 int LookUp(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE], int *next_hop, int *tree_level);
 
+struct Node* DeletePrefix(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE], char *binary_level, char aux[PREFIXSIZE], int *tree_level);
+
 #endif

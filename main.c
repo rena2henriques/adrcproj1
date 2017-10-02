@@ -9,6 +9,7 @@ int main(int argc, char const *argv[])
 	int user_choice = 0;
 	char address[32];
 	char prefix[PREFIXSIZE] = "";
+	char aux[PREFIXSIZE] = "";
 
 	int tree_level = -1;
 	char binary_level = '9';
@@ -17,15 +18,27 @@ int main(int argc, char const *argv[])
 	/* Prefix Tree */
 	struct Node *root = PrefixTree(argc, argv);
 
-	PrintTable(root, root, &binary_level, prefix, &tree_level);
+	/**  TEMPORARY  **/
+	printf("Antes da eliminação:\n");
+	PrintTable(root, root, &binary_level, aux, &tree_level);
 
 	tree_level = 0;
+	binary_level = '9';
 	
-	memset(prefix, '\0', sizeof(prefix));
+	memset(aux, 0, sizeof(aux));
+
+	strcpy(prefix, "0");
+
+	printf("A eliminar o prefixo %s...\n", prefix);
+	root = DeletePrefix(root, root, prefix, &binary_level, aux, &tree_level);
+
+	memset(prefix, 0, sizeof(prefix));
 
 	// momentary!
-	strcpy(prefix, "0010");
+	tree_level = 0;
+	strcpy(prefix, "0");
 
+	printf("A procurar o prefixo %s...\n", prefix);
 	next_hop = LookUp(root, root, prefix, &next_hop, &tree_level);
 
 	if (next_hop == -1 ) {
@@ -33,6 +46,14 @@ int main(int argc, char const *argv[])
 	} else {
 		printf("The correspondent next-hop is %d\n", next_hop);
 	}
+
+	printf("Após eliminação:\n");
+	memset(aux, 0, sizeof(aux));
+	binary_level = '9';
+	tree_level = -1;
+	PrintTable(root, root, &binary_level, aux, &tree_level);
+
+	/**            **/
 
 	// while(1) {
 
