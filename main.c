@@ -10,10 +10,13 @@ int main(int argc, char const *argv[])
 	char address[32];
 	char prefix[PREFIXSIZE];
 
+	int tree_level = -1;
+	char binary_level = '9';
+
 	/* Prefix Tree */
 	struct Node *root = PrefixTree(argc, argv);
 
-	PrintTable(root, root, -1, prefix, 0);
+	PrintTable(root, root, &binary_level, prefix, &tree_level);
 
 
 	// while(1) {
