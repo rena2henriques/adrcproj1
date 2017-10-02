@@ -93,31 +93,31 @@ struct Node *PrefixTree(int argc, char const *argv[]) {
 }
 
 
-void PrintTable(struct Node *root, struct Node *current_node, int binary_value, struct Queue *front, struct Queue * rear) {
+// void PrintTable(struct Node *root, struct Node *current_node, int binary_value, struct Queue *front, struct Queue * rear) {
 
-	if(current_node != root){
+// 	if(current_node != root){
 
-		enq(binary_value, front, rear );
-		if(current_node->next_hop != -1) {
-			display(front, rear);
-			printf(" %d\n", current_node->next_hop);
-		}
-	}
+// 		enq(binary_value, front, rear );
+// 		if(current_node->next_hop != -1) {
+// 			display(front, rear);
+// 			printf(" %d\n", current_node->next_hop);
+// 		}
+// 	}
 
-	if (current_node->child_zero != NULL) {
-		PrintTable(root, current_node->child_zero, 0, front, rear);
-	}
+// 	if (current_node->child_zero != NULL) {
+// 		PrintTable(root, current_node->child_zero, 0, front, rear);
+// 	}
 
-	if (current_node->child_one != NULL) {
-		PrintTable(root, current_node->child_zero, 1, front, rear);
-	}
+// 	if (current_node->child_one != NULL) {
+// 		PrintTable(root, current_node->child_zero, 1, front, rear);
+// 	}
 	
-	// deq(struct Queue *front, struct Queue *rear);
+// 	// deq(struct Queue *front, struct Queue *rear);
 
-	return;
+// 	return;
 
 
-}
+// }
 
 int LookUp(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE], int tree_level) {
 
@@ -133,23 +133,21 @@ void PrintTable(struct Node *root, struct Node *current_node, int binary_level, 
 
 	if(current_node != root){
 
-		prefix[tree_level] = binary_value;
+		prefix[tree_level] = binary_level;
 		if(current_node->next_hop != -1) {
 			printf("%s %d\n", prefix, current_node->next_hop);
 		}
 	}
 
 	if (current_node->child_zero != NULL) {
-		PrintTable(root, current_node->child_zero, 0, prefix, ++tree_level);
+		PrintTable(root, current_node->child_zero, 0, prefix, tree_level++);
 	}
 
 	if (current_node->child_one != NULL) {
-		PrintTable(root, current_node->child_zero, 1, prefix, ++tree_level);
+		PrintTable(root, current_node->child_zero, 1, prefix, tree_level++);
 	}
 	
-	prefix[tree_level] = -1;
+	prefix[tree_level-1] = '9';
 
 	return;
-
-
 }

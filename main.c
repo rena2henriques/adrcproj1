@@ -2,26 +2,18 @@
 #include <stdio.h>
 #include <string.h>
 #include "prefixTrees.h"
-#include "Queue.h"
 
 int main(int argc, char const *argv[])
 {	
 	char temp[50];
 	int user_choice = 0;
 	char address[32];
+	char prefix[PREFIXSIZE];
 
 	/* Prefix Tree */
 	struct Node *root = PrefixTree(argc, argv);
 
-	/* Queue */
-	struct Queue *front = NULL;
-	struct Queue *rear = NULL;
-
-	/* LookUp */
-	int tree_level = 0;
-
-	//PrintTable(struct Node *root, struct Node *current_node, int binary_value, struct Queue *front, struct Queue * rear);
-
+	PrintTable(root, root, -1, prefix, 0);
 
 
 	// while(1) {
