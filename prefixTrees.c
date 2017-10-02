@@ -100,6 +100,11 @@ int LookUp(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE]
 		}
 	}
 
+	// caso em que a root tem uma empty address
+	if(current_node == root && root->next_hop != -1) {
+		(*next_hop) = root->next_hop;
+	}
+
 	if ((*tree_level) < strlen(prefix) ) {
 
 		if (current_node->child_zero != NULL && prefix[*tree_level] == '0') {
@@ -123,6 +128,13 @@ void PrintTable(struct Node *root, struct Node *current_node, char *binary_level
 		aux[(*tree_level)] = *binary_level;
 		if(current_node->next_hop != -1) {
 			printf("%s %d\n", aux, current_node->next_hop);
+		}
+	}
+
+	// caso em que a root tem uma empty address
+	if(current_node == root ){
+		if(current_node->next_hop != -1) {
+			printf("e %d\n", current_node->next_hop);
 		}
 	}
 
