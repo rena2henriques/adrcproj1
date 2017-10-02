@@ -9,11 +9,11 @@ int main(int argc, char const *argv[])
 	int user_choice = 0;
 	char address[32];
 	char prefix[PREFIXSIZE];
-
+	
 	/* Prefix Tree */
 	struct Node *root = PrefixTree(argc, argv);
 
-	PrintTable(root, root, -1, prefix, 0);
+	PrintTable(root, root, -1, prefix, -1);
 
 
 	// while(1) {

@@ -140,14 +140,14 @@ void PrintTable(struct Node *root, struct Node *current_node, int binary_level, 
 	}
 
 	if (current_node->child_zero != NULL) {
-		PrintTable(root, current_node->child_zero, 0, prefix, tree_level++);
+		PrintTable(root, current_node->child_zero, 0, prefix, ++tree_level);
 	}
 
 	if (current_node->child_one != NULL) {
-		PrintTable(root, current_node->child_zero, 1, prefix, tree_level++);
+		PrintTable(root, current_node->child_zero, 1, prefix, ++tree_level);
 	}
 	
-	prefix[tree_level-1] = '9';
+	prefix[tree_level] = '9';
 
 	return;
 }
