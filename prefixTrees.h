@@ -15,12 +15,14 @@ struct Node{
 	struct Node *child_one;
 };
 
-struct Node* InsertTree(char prefix[PREFIXSIZE], int next_hop, struct Node* root);
+struct Node* InsertPrefix(char prefix[PREFIXSIZE], int next_hop, struct Node* root);
 
 struct Node* PrefixTree(int argc, char const *argv[]);
 
 void PrintTable(struct Node *root, struct Node *current_node, char *binary_level, char aux[PREFIXSIZE], int *tree_level );
 
 int LookUp(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE], int *next_hop, int *tree_level);
+
+struct Node* DeletePrefix(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE], char *binary_level, char aux[PREFIXSIZE], int *tree_level);
 
 #endif

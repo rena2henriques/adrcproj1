@@ -1,7 +1,7 @@
 #include "prefixTrees.h"
 #include "utils.h"
 
-struct Node* InsertTree(char prefix[PREFIXSIZE], int next_hop, struct Node *root) {
+struct Node* InsertPrefix(char prefix[PREFIXSIZE], int next_hop, struct Node *root) {
 
 	int n = 0; /* index of the bit on the prefix string*/
 	struct Node *aux = root;
@@ -78,7 +78,7 @@ struct Node *PrefixTree(int argc, char const *argv[]) {
 		fgets(temp, sizeof(temp), file);
 		sscanf(temp, "%s %d", prefix, &next_hop);
 
-		root = InsertTree(prefix, next_hop, root);
+		root = InsertPrefix(prefix, next_hop, root);
 
 		memset(prefix, 0, sizeof(prefix));
 
@@ -100,13 +100,20 @@ int LookUp(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE]
 		}
 	}
 
+
+	// caso em que a root tem uma empty address
+	if(current_node == root && root->next_hop != -1) {
+		(*next_hop) = root->next_hop;
+	}
+
+
 	if ((*tree_level) < strlen(prefix) ) {
 
 		if (current_node->child_zero != NULL && prefix[*tree_level] == '0') {
 			(*tree_level)++;
 			LookUp(root, current_node->child_zero, prefix, next_hop, tree_level);
 		} 
-		else if (current_node->child_one != NULL && prefix[*tree_level] == '1') {
+		else if (current_node->child_one != NULL && prefix[(*tree_level)] == '1') {
 			(*tree_level)++;
 			LookUp(root, current_node->child_one,prefix, next_hop, tree_level);
 
@@ -117,15 +124,19 @@ int LookUp(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE]
 }
 
 
-
-
 void PrintTable(struct Node *root, struct Node *current_node, char *binary_level, char aux[PREFIXSIZE], int *tree_level ) {
 
 	if(current_node != root ){
-
 		aux[(*tree_level)] = *binary_level;
 		if(current_node->next_hop != -1) {
 			printf("%s %d\n", aux, current_node->next_hop);
+		}
+	}
+
+	// caso em que a root tem uma empty address
+	if(current_node == root ){
+		if(current_node->next_hop != -1) {
+			printf("e %d\n", current_node->next_hop);
 		}
 	}
 
@@ -146,6 +157,33 @@ void PrintTable(struct Node *root, struct Node *current_node, char *binary_level
 	aux[(*tree_level)] = '\0';
 	(*tree_level)--;
 
-
 	return;
+}
+
+struct Node* DeletePrefix(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE], char *binary_level, char aux[PREFIXSIZE], int *tree_level) {
+
+	if(current_node != root ){
+		aux[(*tree_level) - 1] = *binary_level;
+	}
+
+	if (strcmp(aux, prefix) == 0) {
+		current_node->next_hop = -1;
+	}
+
+	if (strcmp(prefix, aux) != 0 && root != NULL) {
+
+		if (current_node->child_zero != NULL && prefix[*tree_level] == '0') {
+			(*tree_level)++;
+			(*binary_level) = '0';
+			DeletePrefix(root, current_node->child_zero, prefix, binary_level, aux, tree_level);
+		} 
+		else if (current_node->child_one != NULL && prefix[(*tree_level)] == '1') {
+			(*tree_level)++;
+			(*binary_level) = '1';
+			DeletePrefix(root, current_node->child_one,prefix, binary_level, aux, tree_level);
+
+		}
+	}
+
+	return root;
 }
