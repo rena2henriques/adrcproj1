@@ -8,7 +8,7 @@ struct Node* InsertTree(char prefix[PREFIXSIZE], int next_hop, struct Node *root
 
 	/* for the case of the empty prefix <--- might be changed after 
 	discovering what the professor wants to use as an empty prefix */
-	if (strcmp(prefix, "-1") == 0) {
+	if (strcmp(prefix, "e") == 0) {
 		root->next_hop = next_hop;
 		return root;
 	}
@@ -92,66 +92,60 @@ struct Node *PrefixTree(int argc, char const *argv[]) {
 	return root;
 }
 
+int LookUp(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE], int *next_hop, int *tree_level) {
 
-// void PrintTable(struct Node *root, struct Node *current_node, int binary_value, struct Queue *front, struct Queue * rear) {
+	if(current_node != root ){
+		if(current_node->next_hop != -1) {
+			(*next_hop) = current_node->next_hop;
+		}
+	}
 
-// 	if(current_node != root){
+	if ((*tree_level) < strlen(prefix) ) {
 
-// 		enq(binary_value, front, rear );
-// 		if(current_node->next_hop != -1) {
-// 			display(front, rear);
-// 			printf(" %d\n", current_node->next_hop);
-// 		}
-// 	}
+		if (current_node->child_zero != NULL && prefix[*tree_level] == '0') {
+			(*tree_level)++;
+			LookUp(root, current_node->child_zero, prefix, next_hop, tree_level);
+		} 
+		else if (current_node->child_one != NULL && prefix[*tree_level] == '1') {
+			(*tree_level)++;
+			LookUp(root, current_node->child_one,prefix, next_hop, tree_level);
 
-// 	if (current_node->child_zero != NULL) {
-// 		PrintTable(root, current_node->child_zero, 0, front, rear);
-// 	}
+		}
+	}
 
-// 	if (current_node->child_one != NULL) {
-// 		PrintTable(root, current_node->child_zero, 1, front, rear);
-// 	}
-	
-// 	// deq(struct Queue *front, struct Queue *rear);
-
-// 	return;
-
-
-// }
-
-int LookUp(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE], int tree_level) {
-
-
-
-	return current_node->next_hop;
+	return (*next_hop);
 }
 
 
 
 
-void PrintTable(struct Node *root, struct Node *current_node, char *binary_level, char prefix[PREFIXSIZE], int *tree_level ) {
+void PrintTable(struct Node *root, struct Node *current_node, char *binary_level, char aux[PREFIXSIZE], int *tree_level ) {
 
 	if(current_node != root ){
 
-		prefix[(*tree_level)] = *binary_level;
+		aux[(*tree_level)] = *binary_level;
 		if(current_node->next_hop != -1) {
-			printf("%s %d\n", prefix, current_node->next_hop);
+			printf("%s %d\n", aux, current_node->next_hop);
 		}
 	}
 
 	if (current_node->child_zero != NULL) {
 		(*tree_level)++;
 		(*binary_level) = '0';
-		PrintTable(root, current_node->child_zero, binary_level, prefix, tree_level);
+		PrintTable(root, current_node->child_zero, binary_level, aux, tree_level);
 	}
 
 	if (current_node->child_one != NULL) {
 		(*tree_level)++;
 		(*binary_level) = '1';
-		PrintTable(root, current_node->child_one, binary_level, prefix, tree_level);
+
+		PrintTable(root, current_node->child_one, binary_level, aux, tree_level);
+
 	}
 	
-	prefix[(*tree_level)] = '9';
+	aux[(*tree_level)] = '\0';
+	(*tree_level)--;
+
 
 	return;
 }

@@ -5,7 +5,7 @@
 
 int main(int argc, char const *argv[])
 {	
-	char temp[50];
+	char temp[50] = "";
 	int user_choice = 0;
 	char address[32];
 	char prefix[PREFIXSIZE] = "";
@@ -13,12 +13,20 @@ int main(int argc, char const *argv[])
 
 	int tree_level = -1;
 	char binary_level = '9';
+	int next_hop = -1;
 
 	/* Prefix Tree */
 	struct Node *root = PrefixTree(argc, argv);
 
 	PrintTable(root, root, &binary_level, prefix, &tree_level);
 
+	tree_level = 0;
+	
+	memset(prefix, '\0', sizeof(prefix));
+
+	strcpy(prefix, "101");
+
+	printf("The correspondent next-hop is %d\n", LookUp(root, root, prefix, &next_hop, &tree_level));
 
 
 	// while(1) {
