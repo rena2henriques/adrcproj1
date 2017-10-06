@@ -46,7 +46,6 @@ int main(int argc, char const *argv[])
 				printf("The correspondent next-hop is %d\n", next_hop);
 			}
 		}
-		
 		else if( sscanf(temp, "%d %s %d", &user_choice, prefix_input, &next_hop_input) == 3 && user_choice == 3) {
 			root = InsertPrefix(prefix_input, next_hop_input, root);
 			//confirmar a inserção
@@ -58,15 +57,18 @@ int main(int argc, char const *argv[])
 				printf("Ocorreu um erro na inserção\n");
 			}
 		}
-		
 		else if( sscanf(temp, "%d %s", &user_choice, prefix_input) == 2 && user_choice == 4) {
 			tree_level = 0;
 			root = DeletePrefix(root, root, prefix_input, &binary_level, aux, &tree_level);
 			printf("Prefix successfully deleted\n");
 		}
-		else if( sscanf(temp, "%s", address) == 1)
-			if(strcmp(address, "exit") == 0)
+		else if( sscanf(temp, "%s", address) == 1) {
+			if(strcmp(address, "exit") == 0) {
+				// free the prefix table
+
 				break;
+			}
+		}
 				
 		//clear buffers
 		memset(address, 0, sizeof(address));
