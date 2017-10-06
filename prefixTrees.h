@@ -33,7 +33,7 @@ int LookUp(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE]
 
 struct Node* DeletePrefix(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE], char *binary_level, char aux[PREFIXSIZE], int *tree_level);
 
-struct Node * FreePrefixTree(struct Node *root, struct Node *current_node);
+void FreePrefixTree(struct Node *root, struct Node *current_node);
 
 struct TwoBitNode* BinaryToTwoBit(struct Node *root, struct TwoBitNode *root_two, int *tree_level, char prefix[PREFIXSIZE], char *binary_level);
 

@@ -65,7 +65,7 @@ int main(int argc, char const *argv[])
 		else if( sscanf(temp, "%s", address) == 1) {
 			if(strcmp(address, "exit") == 0) {
 				// free the prefix table
-
+				FreePrefixTree(root, root);
 				break;
 			}
 		}
