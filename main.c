@@ -59,7 +59,7 @@ int main(int argc, char const *argv[])
 		}
 		else if( sscanf(temp, "%d %s", &user_choice, prefix_input) == 2 && user_choice == 4) {
 			tree_level = 0;
-			root = DeletePrefix(root, root, prefix_input, &binary_level, aux, &tree_level);
+			root = DeletePrefix(root, prefix_input, &binary_level, aux, &tree_level);
 			printf("Prefix successfully deleted\n");
 		}
 		else if( sscanf(temp, "%s", address) == 1) {

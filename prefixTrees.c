@@ -160,34 +160,36 @@ void PrintTable(struct Node *root, struct Node *current_node, char *binary_level
 	return;
 }
 
-struct Node* DeletePrefix(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE], char *binary_level, char aux[PREFIXSIZE], int *tree_level) {
+struct Node* DeletePrefix(struct Node *root, char prefix[PREFIXSIZE], char *binary_level, char aux[PREFIXSIZE], int *tree_level) {
 
-	if(current_node != root ){
+	if ((*tree_level) > 0) {
 		aux[(*tree_level) - 1] = *binary_level;
 	}
 
 	if (strcmp(aux, prefix) == 0) {
-		current_node->next_hop = -1;
+		root->next_hop = -1;
+		free(root);
+		return NULL;
 	}
 
 	if (strcmp(prefix, aux) != 0 && root != NULL) {
 
-		if (current_node->child_zero != NULL && prefix[*tree_level] == '0') {
+		if (root->child_zero != NULL && prefix[*tree_level] == '0') {
 			(*tree_level)++;
 			(*binary_level) = '0';
-			DeletePrefix(root, current_node->child_zero, prefix, binary_level, aux, tree_level);
+			root->child_zero = DeletePrefix(root->child_zero, prefix, binary_level, aux, tree_level);
 		} 
-		else if (current_node->child_one != NULL && prefix[(*tree_level)] == '1') {
+		else if (root->child_one != NULL && prefix[(*tree_level)] == '1') {
 			(*tree_level)++;
 			(*binary_level) = '1';
-			DeletePrefix(root, current_node->child_one,prefix, binary_level, aux, tree_level);
+			root->child_one = DeletePrefix(root->child_one, prefix, binary_level, aux, tree_level);
 
 		}
 	}
 
 	// if the node correspondent to the prefix that must be deleted is a leaf, then we free it from our tree
-	if(current_node->child_zero == NULL && current_node->child_one == NULL && current_node->next_hop == -1){
-		free(current_node);
+	if(root->child_zero == NULL && root->child_one == NULL && root->next_hop == -1){
+		free(root);
 		return NULL;
 	}
 
