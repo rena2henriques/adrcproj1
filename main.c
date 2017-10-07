@@ -51,7 +51,7 @@ int main(int argc, char const *argv[])
 			//confirmar a inserção
 			tree_level = 0;
 			next_hop = -1;
-			if (LookUp(root, root, prefix_input, &next_hop, &tree_level) == next_hop_input) {
+			if (LookUp(root, root, prefix_input, &next_hop, &tree_level) == next_hop_input) { // this line might be useless
 				printf("Prefix successfully inserted\n");
 			} else {
 				printf("Ocorreu um erro na inserção\n");
@@ -65,7 +65,7 @@ int main(int argc, char const *argv[])
 		else if( sscanf(temp, "%s", address) == 1) {
 			if(strcmp(address, "exit") == 0) {
 				// free the prefix table
-				FreePrefixTree(root, root);
+				FreePrefixTree(root);
 				break;
 			}
 		}

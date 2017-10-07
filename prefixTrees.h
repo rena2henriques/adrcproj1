@@ -33,8 +33,13 @@ int LookUp(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE]
 
 struct Node* DeletePrefix(struct Node *root, char prefix[PREFIXSIZE], char *binary_level, char aux[PREFIXSIZE], int *tree_level);
 
-void FreePrefixTree(struct Node *root, struct Node *current_node);
+void FreePrefixTree(struct Node *root);
 
 struct TwoBitNode* BinaryToTwoBit(struct Node *root, struct TwoBitNode *root_two, int *tree_level, char prefix[PREFIXSIZE], char *binary_level);
+
+// Function that inserts a new node at two bit prefix tree
+struct TwoBitNode* InsertTwoBit(struct TwoBitNode *root_two, char prefix[PREFIXSIZE], int next_hop);
+
+void FreeTwoBitPrefixTree(struct TwoBitNode *root_two);
 
 #endif

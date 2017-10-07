@@ -6,8 +6,7 @@ struct Node* InsertPrefix(char prefix[PREFIXSIZE], int next_hop, struct Node *ro
 	int n = 0; /* index of the bit on the prefix string*/
 	struct Node *aux = root;
 
-	/* for the case of the empty prefix <--- might be changed after 
-	discovering what the professor wants to use as an empty prefix */
+	/* for the case of the empty prefix */
 	if (strcmp(prefix, "e") == 0) {
 		root->next_hop = next_hop;
 		return root;
@@ -197,17 +196,17 @@ struct Node* DeletePrefix(struct Node *root, char prefix[PREFIXSIZE], char *bina
 }
 
 
-void FreePrefixTree(struct Node *root, struct Node *current_node) {
+void FreePrefixTree(struct Node *root) {
 	
-	if (current_node->child_zero != NULL) {
-		FreePrefixTree(root, current_node->child_zero);
+	if (root->child_zero != NULL) {
+		FreePrefixTree(root->child_zero);
 	}
 
-	if (current_node->child_one != NULL) {
-		FreePrefixTree(root, current_node->child_one);
+	if (root->child_one != NULL) {
+		FreePrefixTree(root->child_one);
 	}
 
-	free(current_node);
+	free(root);
 	
 	return;
 };
@@ -296,3 +295,120 @@ void FreePrefixTree(struct Node *root, struct Node *current_node) {
 // 	BinaryToTwoBit(root, current_node->child_one, root_two, tree_level, char prefix[PREFIXSIZE], char *binary_level);
 
 // }
+
+struct TwoBitNode* InsertTwoBit(struct TwoBitNode *root_two, char prefix[PREFIXSIZE], int next_hop) {
+
+	int n = 0; /* index of the prefix string*/
+	struct TwoBitNode *aux = NULL;
+
+	if (root_two == NULL) {
+		root_two = (struct TwoBitNode*) mymalloc( sizeof(struct TwoBitNode));
+		// initialize the root node
+		root_two->next_hop = -1;
+		root_two->child_00 = NULL;
+		root_two->child_01 = NULL;
+		root_two->child_10 = NULL;
+		root_two->child_11 = NULL;
+	}
+
+	/* for the case of the empty prefix */
+	if (strcmp(prefix, "e") == 0) {
+		root_two->next_hop = next_hop;
+		return root_two;
+	}
+
+	// using aux to avoid losing the pointer to root_two
+	aux = root_two;
+
+	/* the prefix is evaluated 2 by 2 and n must always be odd, that way we 
+	can always do n -1 without returning errors */
+	for (n = 1; n < strlen(prefix); n = n + 2) {
+
+		if (prefix[n-1] == '0' && prefix[n] == '0') {
+			// if the child exists we move to it, if it doesnt, then we create it
+			if (aux->child_00 != NULL) {
+				aux=aux->child_00;
+			} else {
+				aux->child_00 = (struct TwoBitNode*) mymalloc( sizeof(struct TwoBitNode));
+				aux = aux->child_00;
+				// initializes the new node
+				aux->next_hop = -1;
+				aux->child_00 = NULL;
+				aux->child_01 = NULL;
+				aux->child_10 = NULL;
+				aux->child_11 = NULL;
+			} 
+
+		} else if (prefix[n-1] == '0' && prefix[n] == '1') {
+			if (aux->child_01 != NULL) {
+				aux = aux->child_01;
+			} else {
+				aux->child_01 = (struct TwoBitNode*) mymalloc( sizeof(struct TwoBitNode));
+				aux = aux->child_01;
+				// initializes the new node
+				aux->next_hop = -1;
+				aux->child_00 = NULL;
+				aux->child_01 = NULL;
+				aux->child_10 = NULL;
+				aux->child_11 = NULL;
+			} 
+			
+		} else if (prefix[n-1] == '1' && prefix[n] == '0') {
+			if (aux->child_10 != NULL) {
+				aux = aux->child_10;
+			} else {
+				aux->child_10 = (struct TwoBitNode*) mymalloc( sizeof(struct TwoBitNode));
+				aux = aux->child_10;
+				// initializes the new node
+				aux->next_hop = -1;
+				aux->child_00 = NULL;
+				aux->child_01 = NULL;
+				aux->child_10 = NULL;
+				aux->child_11 = NULL;
+			} 
+			
+		} else if (prefix[n-1] == '1' && prefix[n] == '1') {
+			if (aux->child_11 != NULL) {
+				aux = aux->child_11;
+			} else {
+				aux->child_11 = (struct TwoBitNode*) mymalloc( sizeof(struct TwoBitNode));
+				aux = aux->child_11;
+				// initializes the new node
+				aux->next_hop = -1;
+				aux->child_00 = NULL;
+				aux->child_01 = NULL;
+				aux->child_10 = NULL;
+				aux->child_11 = NULL;
+			} 
+			
+		}
+
+	}
+
+	aux->next_hop = next_hop;
+
+	return root_two;
+}
+
+void FreeTwoBitPrefixTree(struct TwoBitNode *root_two) {
+	
+	if (root_two->child_00 != NULL) {
+		FreeTwoBitPrefixTree(root_two->child_00);
+	}
+
+	if (root_two->child_01 != NULL) {
+		FreeTwoBitPrefixTree(root_two->child_01);
+	}
+
+	if (root_two->child_10 != NULL) {
+		FreeTwoBitPrefixTree(root_two->child_10);
+	}
+
+	if (root_two->child_11 != NULL) {
+		FreeTwoBitPrefixTree(root_two->child_11);
+	}
+
+	free(root_two);
+	
+	return;
+};
