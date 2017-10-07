@@ -148,7 +148,6 @@ void PrintTable(struct Node *root, struct Node *current_node, char *binary_level
 	if (current_node->child_one != NULL) {
 		(*tree_level)++;
 		(*binary_level) = '1';
-
 		PrintTable(root, current_node->child_one, binary_level, aux, tree_level);
 
 	}
@@ -211,90 +210,114 @@ void FreePrefixTree(struct Node *root) {
 	return;
 };
 
+/**
+ * Descrição da função
+ * 
+ * Percorre-se toda a prefix tree, se o nó estiver num nivel impar processa-se a informação do nó e dos seus filhos(caso existam)
+ * se o nó estiver num nivel par, a sua informação ja foi processada, já que obrigatoriamente o seu pai estava num nivel impar que ja foi processado
+ * avança-se para o proximo nó sem qualquer processamento
+ * 
+ * Perante um nó (num nivel impar) existem duas possibilidades
+ * (1): o next_hop não é '-1', logo juntar 0 ou 1 para tornar o prefixo par, tratar a informação obrigatoriamente para os dois casos (para 0 e para 1), 
+ * 		mesmo que os filhos não existam, já que para TwoBitTree essa informação tem de estar presente, verficar os filhos desse nó, em que podem exisitir as seguintes situações:
+ * 			(1-a) Caso tenha filhos e os seus next hops não sejam -1, esse next_hop 'ganha' ao next_hop do pai (nó atual do nivel impar), porque é mais especifico, juntar à TwoBitTree
+ * 			(1-b) Caso não tenha filhos, ou se tiver e os seus next_hop são -1, o next_hop do pai 'ganha', já que não há mais informação, juntar à TwoBitTree
+ *
+ * (2): o next_hop do nó atual é '-1', este nó nunca poderá ser uma folha, juntar 0 ou 1, para tornar o prefixo par, tratar apenas a informação dos filhos que existam,
+ * 		pode suceder umas das seguintes situações
+ * 			(2-a) O(s) filho(s) têm next_hop diferente de -1, colocar na twoBitTree com o next_hop do filho
+ * 			(2-b) O(s) filho(s) têm next_hop igual a -1, não colocar nada na twoBitTree, haverá informação relevante num nivel posterior da arvore
+**/
+
+struct TwoBitNode* BinaryToTwoBit(struct Node *root, struct Node *current_node, struct TwoBitNode *root_two, 
+									int *tree_level, char prefix[PREFIXSIZE], char *binary_level, int *relevant_hop) {
 
 
-// struct TwoBitNode* BinaryToTwoBit(struct Node *root, struct Node *current_node, struct TwoBitNode *root_two, int *tree_level, char prefix[PREFIXSIZE], char *binary_level) {
+	char aux[PREFIXSIZE] = "";
+	
+	strcpy(aux, prefix);
+	
+ 	if (current_node == root) {
+ 		//cria a raiz da TwoBitTree
+ 		root_two = InsertTwoBit(root_two, aux, root->next_hop);
+ 	}
+ 	
+ 	else if ((*tree_level) % 2){ //if odd
+		if(current_node->next_hop != -1) {		/**Descrição (1)**/
+ 			if(current_node->child_zero != NULL){ 
+				aux[(*tree_level)] = '0'; //junta um '0' ao prefixo
+ 				if (current_node->child_zero->next_hop == -1) { 	/**Descrição (1-b)**/
+ 					InsertTwoBit(root_two, aux, current_node->next_hop);
+ 				} else {											/**Descrição (1-a)**/
+ 					InsertTwoBit(root_two, aux, current_node->child_zero->next_hop); 
+ 				}
+ 			} else {	/**Descrição (1-b)**/
+				aux[(*tree_level)] = '0'; 
+				InsertTwoBit(root_two, aux, current_node->next_hop); 
+			}
+					
+			if(current_node->child_one != NULL) {
+				aux[(*tree_level)] = '1'; //junta um '1' ao prefixo
+				if (current_node->child_one->next_hop == -1) {	/**Descrição (1-b)**/
+ 					InsertTwoBit(root_two, aux, current_node->next_hop);
+ 				} else {										/**Descrição (1-a)**/
+ 					InsertTwoBit(root_two, aux, current_node->child_zero->next_hop);
+ 				}
+ 			} else {	/**Descrição (1-b)**/
+				aux[(*tree_level)] = '1'; 
+ 				InsertTwoBit(root_two, aux, current_node->next_hop);
+ 			}
+ 			
+ 		} else { /**next hop == -1, Descrição (2)**/
+				
+ 			if(current_node->child_zero != NULL){	//Se for NULL não se faz nada
+ 				if (current_node->child_zero->next_hop == -1) {	/**Descrição (2-b)**/
+ 					aux[(*tree_level)] = '0'; //junta um '0' ao prefixo
+ 					InsertTwoBit(root_two, aux, (*relevant_hop));
+				} else {										/**Descrição (2-a)**/
+					aux[(*tree_level)] = '0'; //junta um '1' ao prefixo
+					InsertTwoBit(root_two, aux, current_node->child_zero->next_hop);
+				}
+			}
+			if(current_node->child_one != NULL){ 	//se for NULL não se faz nada
+				if (current_node->child_one->next_hop == -1) {	/**Descrição (2-b)**/
+					aux[(*tree_level)] = '1'; //junta um '1' ao prefixo
+					InsertTwoBit(root_two, aux, (*relevant_hop)); 
+				} else {										/**Descrição (2-a)**/
+					aux[(*tree_level)] = '1'; //junta um '1' ao prefixo
+					InsertTwoBit(root_two, aux, current_node->child_one->next_hop); 
+				}
+					
+			}
+ 		}
+ 	}
+ 		
+	if(current_node->next_hop != -1)	//é necessario manter info do ultimo next_hop diferente de -1
+		(*relevant_hop) = current_node->next_hop;
+	
+	if (current_node->child_zero != NULL) {
+		(*binary_level) = '0';
+		prefix[(*tree_level)] = (*binary_level);
+		(*tree_level)++;
+		root_two = BinaryToTwoBit(root, current_node->child_zero, root_two, tree_level, prefix, binary_level, relevant_hop);
+	}
+	
+	if(current_node->next_hop != -1)
+		(*relevant_hop) = current_node->next_hop;
+	
+	if (current_node->child_one != NULL) {
+		(*binary_level) = '1';
+		prefix[(*tree_level)] = (*binary_level);
+		(*tree_level)++;
+		root_two = BinaryToTwoBit(root, current_node->child_one, root_two, tree_level, prefix, binary_level, relevant_hop);
+	}
+	
+	prefix[(*tree_level)] = '\0';
+	(*tree_level)--;
+	
+	return root_two;
 
-// 	if (current_node == root) {
-// 		// função que aloca TwoBitNode, insere na TwoBit PrefixTree e retorna a root dela
-// 	}
-// 	if ((*tree_level) == odd){
-// 		if(current_node->child_zero != NULL) {
-
-// 				if(current_node->next_hop != -1) {
-
-// 					if(current_node->child_zero != NULL){
-// 						if (current_node->child_zero->next_hop == -1) {
-// 							junta um '0' ao prefixo
-// 							ultimo_next_hop = current_node->next_hop
-// 							cria um no com next hop=ultimo_next_hop
-// 							junta esse nó ao 2bittree
-// 						} else {
-// 							junta um '0' ao prefixo
-// 							cria um no com next hop=current_node->child_zero->next_hop
-// 							junta esse nó ao 2bittree
-// 						}
-// 					} else {
-// 						junta um '0' ao prefixo
-// 						ultimo_next_hop = current_node->next_hop
-// 						cria um no com next hop=ultimo_next_hop
-// 						junta esse nó ao 2bittree
-// 					}
-
-// 					if(current_node->child_one != NULL){
-// 						if (current_node->child_one->next_hop == -1) {
-// 							junta um '1' ao prefixo
-// 							ultimo_next_hop = current_node->next_hop
-// 							cria um no com next hop=ultimo_next_hop
-// 							junta esse nó ao 2bittree
-// 						} else {
-// 							junta um '1' ao prefixo
-// 							cria um no com next hop=current_node->child_one->next_hop
-// 							junta esse nó ao 2bittree
-// 						}
-// 					} else {
-// 						junta um '1' ao prefixo
-// 						ultimo_next_hop = current_node->next_hop
-// 						cria um no com next hop=ultimo_next_hop
-// 						junta esse nó ao 2bittree
-// 					}
-
-// 				} else {
-// 					if(current_node->child_zero != NULL){
-// 						if (current_node->child_zero->next_hop == -1) {
-// 							junta um '0' ao prefixo
-// 							cria um no com next hop=ultimo_next_hop
-// 							junta esse nó ao 2bittree
-// 						} else {
-// 							junta um '0' ao prefixo
-// 							cria um no com next hop=current_node->child_zero->next_hop
-// 							junta esse nó ao 2bittree
-// 						}
-// 					}
-
-// 					if(current_node->child_one != NULL){ 
-// 						if (current_node->child_one->next_hop == -1) {
-// 							junta um '1' ao prefixo
-// 							cria um no com next hop=ultimo_next_hop
-// 							junta esse nó ao 2bittree
-// 						} else {
-// 							junta um '1' ao prefixo
-// 							cria um no com next hop=current_node->child_one->next_hop
-// 							junta esse nó ao 2bittree
-// 						}
-// 					} 
-// 				}
-
-// 		} else if(current_node->child_one != NULL) {
-
-// 			// meter o que está acima para o child_one
-// 		}
-// 	}
-
-// 	BinaryToTwoBit(root, current_node->child_zero, root_two, tree_level, char prefix[PREFIXSIZE], char *binary_level);
-// 	BinaryToTwoBit(root, current_node->child_one, root_two, tree_level, char prefix[PREFIXSIZE], char *binary_level);
-
-// }
+ }
 
 struct TwoBitNode* InsertTwoBit(struct TwoBitNode *root_two, char prefix[PREFIXSIZE], int next_hop) {
 
@@ -304,11 +327,12 @@ struct TwoBitNode* InsertTwoBit(struct TwoBitNode *root_two, char prefix[PREFIXS
 	if (root_two == NULL) {
 		root_two = (struct TwoBitNode*) mymalloc( sizeof(struct TwoBitNode));
 		// initialize the root node
-		root_two->next_hop = -1;
+		root_two->next_hop = next_hop;
 		root_two->child_00 = NULL;
 		root_two->child_01 = NULL;
 		root_two->child_10 = NULL;
 		root_two->child_11 = NULL;
+		return root_two; //1ª vez
 	}
 
 	/* for the case of the empty prefix */
@@ -332,7 +356,7 @@ struct TwoBitNode* InsertTwoBit(struct TwoBitNode *root_two, char prefix[PREFIXS
 				aux->child_00 = (struct TwoBitNode*) mymalloc( sizeof(struct TwoBitNode));
 				aux = aux->child_00;
 				// initializes the new node
-				aux->next_hop = -1;
+				aux->next_hop = next_hop;
 				aux->child_00 = NULL;
 				aux->child_01 = NULL;
 				aux->child_10 = NULL;
@@ -346,7 +370,7 @@ struct TwoBitNode* InsertTwoBit(struct TwoBitNode *root_two, char prefix[PREFIXS
 				aux->child_01 = (struct TwoBitNode*) mymalloc( sizeof(struct TwoBitNode));
 				aux = aux->child_01;
 				// initializes the new node
-				aux->next_hop = -1;
+				aux->next_hop = next_hop;
 				aux->child_00 = NULL;
 				aux->child_01 = NULL;
 				aux->child_10 = NULL;
@@ -360,7 +384,7 @@ struct TwoBitNode* InsertTwoBit(struct TwoBitNode *root_two, char prefix[PREFIXS
 				aux->child_10 = (struct TwoBitNode*) mymalloc( sizeof(struct TwoBitNode));
 				aux = aux->child_10;
 				// initializes the new node
-				aux->next_hop = -1;
+				aux->next_hop = next_hop;
 				aux->child_00 = NULL;
 				aux->child_01 = NULL;
 				aux->child_10 = NULL;
@@ -374,7 +398,7 @@ struct TwoBitNode* InsertTwoBit(struct TwoBitNode *root_two, char prefix[PREFIXS
 				aux->child_11 = (struct TwoBitNode*) mymalloc( sizeof(struct TwoBitNode));
 				aux = aux->child_11;
 				// initializes the new node
-				aux->next_hop = -1;
+				aux->next_hop = next_hop;
 				aux->child_00 = NULL;
 				aux->child_01 = NULL;
 				aux->child_10 = NULL;
@@ -411,4 +435,4 @@ void FreeTwoBitPrefixTree(struct TwoBitNode *root_two) {
 	free(root_two);
 	
 	return;
-};
+}

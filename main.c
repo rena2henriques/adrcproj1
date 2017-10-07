@@ -9,16 +9,21 @@ int main(int argc, char const *argv[])
 	int user_choice = 0;
 	char address[32];
 	char prefix_input[PREFIXSIZE] = "";
+	char prefix_two[PREFIXSIZE] = "";
 	char aux[PREFIXSIZE] = "";
 
 
 	int tree_level = -1;
+	int tree_level_two = 0;
 	char binary_level = '9';
+	char binary_level_two = '9';
 	int next_hop = -1;
 	int next_hop_input = -1;
+	int relevant_hop = -1;
 
 	/* Prefix Tree */
 	struct Node *root = PrefixTree(argc, argv);
+	struct TwoBitNode *root_two = BinaryToTwoBit(root, root, root_two, &tree_level_two, prefix_two, &binary_level_two, &relevant_hop);
 
 	while(1) {
 		printf("\n");
