@@ -261,7 +261,7 @@ struct TwoBitNode* BinaryToTwoBit(struct Node *root, struct Node *current_node, 
 				if (current_node->child_one->next_hop == -1) {	/**Descrição (1-b)**/
  					InsertTwoBit(root_two, aux, current_node->next_hop);
  				} else {										/**Descrição (1-a)**/
- 					InsertTwoBit(root_two, aux, current_node->child_zero->next_hop);
+ 					InsertTwoBit(root_two, aux, current_node->child_one->next_hop);
  				}
  			} else {	/**Descrição (1-b)**/
 				aux[(*tree_level)] = '1'; 
