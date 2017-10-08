@@ -414,6 +414,72 @@ struct TwoBitNode* InsertTwoBit(struct TwoBitNode *root_two, char prefix[PREFIXS
 	return root_two;
 }
 
+void PrintTableEven(struct TwoBitNode *root, struct TwoBitNode *current_node, char *binary_level, char aux[PREFIXSIZE], int *tree_level ) {
+
+	if(current_node != root ){
+		if(current_node->next_hop != -1) {
+			printf("%s %d\n", aux, current_node->next_hop);
+		}
+	}
+
+	// caso em que a root tem uma empty address
+	if(current_node == root ){
+		if(current_node->next_hop != -1) {
+			printf("e %d\n", current_node->next_hop);
+		}
+	}
+
+	if (current_node->child_00 != NULL) {
+		(*tree_level)++;
+		(*binary_level) = '0';
+		aux[(*tree_level)] = *binary_level;
+		(*tree_level)++;
+		(*binary_level) = '0';
+		aux[(*tree_level)] = *binary_level;
+		PrintTableEven(root, current_node->child_00, binary_level, aux, tree_level);
+	}
+
+	if (current_node->child_01 != NULL) {
+		(*tree_level)++;
+		(*binary_level) = '0';
+		aux[(*tree_level)] = *binary_level;
+		(*tree_level)++;
+		(*binary_level) = '1';
+		aux[(*tree_level)] = *binary_level;
+		PrintTableEven(root, current_node->child_01, binary_level, aux, tree_level);
+
+	}
+	
+	if (current_node->child_10 != NULL) {
+		(*tree_level)++;
+		(*binary_level) = '1';
+		aux[(*tree_level)] = *binary_level;
+		(*tree_level)++;
+		(*binary_level) = '0';
+		aux[(*tree_level)] = *binary_level;
+		PrintTableEven(root, current_node->child_10, binary_level, aux, tree_level);
+
+	}
+	
+	if (current_node->child_11 != NULL) {
+		(*tree_level)++;
+		(*binary_level) = '1';
+		aux[(*tree_level)] = *binary_level;
+		(*tree_level)++;
+		(*binary_level) = '1';
+		aux[(*tree_level)] = *binary_level;
+		PrintTableEven(root, current_node->child_11, binary_level, aux, tree_level);
+
+	}
+	
+	aux[(*tree_level)] = '\0';
+	(*tree_level)--;
+	aux[(*tree_level)] = '\0';
+	(*tree_level)--;
+
+	return;
+}
+
 void FreeTwoBitPrefixTree(struct TwoBitNode *root_two) {
 	
 	if (root_two->child_00 != NULL) {

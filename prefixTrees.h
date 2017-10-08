@@ -40,6 +40,8 @@ struct TwoBitNode* BinaryToTwoBit(struct Node *root, struct Node *current_node, 
 // Function that inserts a new node at two bit prefix tree
 struct TwoBitNode* InsertTwoBit(struct TwoBitNode *root_two, char prefix[PREFIXSIZE], int next_hop);
 
+void PrintTableEven(struct TwoBitNode *root, struct TwoBitNode *current_node, char *binary_level, char aux[PREFIXSIZE], int *tree_level );
+
 void FreeTwoBitPrefixTree(struct TwoBitNode *root_two);
 
 #endif

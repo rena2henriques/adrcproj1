@@ -24,6 +24,7 @@ int main(int argc, char const *argv[])
 	/* Prefix Tree */
 	struct Node *root = PrefixTree(argc, argv);
 	struct TwoBitNode *root_two = BinaryToTwoBit(root, root, root_two, &tree_level_two, prefix_two, &binary_level_two, &relevant_hop);
+	
 
 	while(1) {
 		printf("\n");
@@ -32,6 +33,7 @@ int main(int argc, char const *argv[])
 		printf(" - write 2 and an Adress if you want to look up the next-hop of said address;\n");
 		printf(" - write 3, a prefix and the associated next-hop to write them in the table;\n");
 		printf(" - write 4 and a prefix if you want to remove the prefix from the table;\n");
+		printf(" - write 5 if you want to print an even prefix table;\n");
 		printf(" - write exit if you want to exit the program\n");
 		fgets(temp, sizeof(temp), stdin);
 		printf("\n");
@@ -67,6 +69,14 @@ int main(int argc, char const *argv[])
 			root = DeletePrefix(root, prefix_input, &binary_level, aux, &tree_level);
 			printf("Prefix successfully deleted\n");
 		}
+		
+		else if( sscanf(temp, "%d", &user_choice) == 1 && user_choice == 5) {
+			printf("Prefix Table Even:\n");
+			tree_level_two = -1;
+			memset(prefix_two, 0, sizeof(prefix_two));
+			PrintTableEven(root_two, root_two, &binary_level_two, prefix_two, &tree_level_two );
+		}
+		
 		else if( sscanf(temp, "%s", address) == 1) {
 			if(strcmp(address, "exit") == 0) {
 				// free the prefix table
