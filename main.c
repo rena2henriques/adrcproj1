@@ -73,17 +73,19 @@ int main(int argc, char const *argv[])
 			printf("Prefix Table Even:\n");
 			tree_level_two = 0;
 			memset(prefix_two, 0, sizeof(prefix_two));
-			FreeTwoBitPrefixTree(root_two);
+			root_two = FreeTwoBitPrefixTree(root_two);
+
 			root_two = BinaryToTwoBit(root, root, root_two, &tree_level_two, prefix_two, &binary_level_two, &relevant_hop);
 			tree_level_two = -1;
+			memset(prefix_two, 0, sizeof(prefix_two));
 			PrintTableEven(root_two, root_two, &binary_level_two, prefix_two, &tree_level_two );
 		}
 		
 		else if( sscanf(temp, "%s", address) == 1) {
 			if(strcmp(address, "exit") == 0) {
 				// free the prefix table
-				FreePrefixTree(root);
-				FreeTwoBitPrefixTree(root_two);
+				root = FreePrefixTree(root);
+				root_two = FreeTwoBitPrefixTree(root_two);
 				break;
 			}
 		}

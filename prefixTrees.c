@@ -166,8 +166,6 @@ struct Node* DeletePrefix(struct Node *root, char prefix[PREFIXSIZE], char *bina
 
 	if (strcmp(aux, prefix) == 0) {
 		root->next_hop = -1;
-		free(root);
-		return NULL;
 	}
 
 	if (strcmp(prefix, aux) != 0 && root != NULL) {
@@ -195,10 +193,10 @@ struct Node* DeletePrefix(struct Node *root, char prefix[PREFIXSIZE], char *bina
 }
 
 
-void FreePrefixTree(struct Node *root) {
+struct Node * FreePrefixTree(struct Node *root) {
 	
 	if (root == NULL){
-		return;
+		return root;
 	}
 
 	if (root->child_zero != NULL) {
@@ -210,8 +208,9 @@ void FreePrefixTree(struct Node *root) {
 	}
 	
 	free(root);
+	root = NULL;
 
-	return;
+	return root;
 };
 
 /**
@@ -484,10 +483,10 @@ void PrintTableEven(struct TwoBitNode *root, struct TwoBitNode *current_node, ch
 	return;
 }
 
-void FreeTwoBitPrefixTree(struct TwoBitNode *root_two) {
+struct TwoBitNode * FreeTwoBitPrefixTree(struct TwoBitNode *root_two) {
 	
 	if (root_two == NULL) {
-		return;
+		return root_two;
 	}
 
 	if (root_two->child_00 != NULL) {
@@ -507,6 +506,7 @@ void FreeTwoBitPrefixTree(struct TwoBitNode *root_two) {
 	}
 
 	free(root_two);
-	
-	return;
+	root_two = NULL;
+
+	return root_two;
 }
