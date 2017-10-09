@@ -23,8 +23,7 @@ int main(int argc, char const *argv[])
 
 	/* Prefix Tree */
 	struct Node *root = PrefixTree(argc, argv);
-	struct TwoBitNode *root_two = BinaryToTwoBit(root, root, root_two, &tree_level_two, prefix_two, &binary_level_two, &relevant_hop);
-	
+	struct TwoBitNode *root_two = NULL;	
 
 	while(1) {
 		printf("\n");
@@ -72,8 +71,11 @@ int main(int argc, char const *argv[])
 		
 		else if( sscanf(temp, "%d", &user_choice) == 1 && user_choice == 5) {
 			printf("Prefix Table Even:\n");
-			tree_level_two = -1;
+			tree_level_two = 0;
 			memset(prefix_two, 0, sizeof(prefix_two));
+			FreeTwoBitPrefixTree(root_two);
+			root_two = BinaryToTwoBit(root, root, root_two, &tree_level_two, prefix_two, &binary_level_two, &relevant_hop);
+			tree_level_two = -1;
 			PrintTableEven(root_two, root_two, &binary_level_two, prefix_two, &tree_level_two );
 		}
 		
@@ -81,6 +83,7 @@ int main(int argc, char const *argv[])
 			if(strcmp(address, "exit") == 0) {
 				// free the prefix table
 				FreePrefixTree(root);
+				FreeTwoBitPrefixTree(root_two);
 				break;
 			}
 		}
