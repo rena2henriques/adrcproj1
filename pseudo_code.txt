@@ -1,0 +1,170 @@
+
+Notas e Escolhas acerca do código:
+- Assumiu-se que o ficheiro com a PrefixTable teria um 'e' como prefixo quando quisesse adicionar um empty prefix à PrefixTree
+- Assumiu-se que um empty prefix só pode ser dado à raiz da PrefixTree
+- Assumiu-se que se um vértice não tiver next_hop então o seu valor é -1
+
+
+// prefix is a string of 0s and 1s
+// root is the top of the tree and correponds to the first bit of the prefix
+
+InsertPrefix( prefix, next_hop, root) {
+	
+	// case that the next_hop that's being inserted 
+	// corresponds to the empty prefix
+	if prefix = 'e'
+		next_hop of root = next_hop
+		return root
+	endif
+
+	for ( from the first bit of prefix ; to the end of prefix; increments to the the next bit)
+
+		if the current bit equals '0'
+
+			if the child to the left exists
+
+				current node = current node's left child
+
+			else
+
+				creates left child
+				current node = current node's left child
+			endif
+
+		else if the current bit equals '1'
+
+			if the child to the right exists
+
+				current node = current node's right child
+
+			else
+
+				creates right child
+				current node = current node's right child
+			endif
+
+		endif
+
+	endfor
+
+	next_hop of current node = next_hop	
+
+	return root
+}
+
+
+A função InsertPrefix tem um algoritmo bastante simples que não precisa de recorrer a recursividade.
+Recebendo o prefixo que se pretende inserir, a função analisa cada bit do prefixo e percorre a árvore
+pelo filho da esquerda ou da direita consoante o bit analisado seja 0 ou 1, respetivamente. 
+Caso ainda não exista o vértice correspondente a um certo bit, este é criado, senão o programa passa pelo
+vértice já existente. 
+A operação de inserção percorre sempre o número de ciclos do loop for correspondente ao tamanho (nº de bits) 
+do prefixo, ou seja, a complexidade temporal deste algoritmo é O(m), em que "m" é o tamanho do prefixo.
+Quanto à complexidade do espaço pode-se concluir que, no pior caso, a complexidade é, também, O(m), uma vez
+que pode ocorrer a situação em que nenhum vértice da árvore corresponde à sequência de bits do prefixo e nesse 
+caso deverão ser criados m vértices novos.
+
+
+// num_args -> number of arguments on command line
+// args -> arguments on command line
+
+PrefixTree(num_args, args) {
+	
+	creates the root of the prefix tree
+	initializes root of the prefix tree
+
+	if num_args = 1
+		uses the default test file PrefixTable.txt
+	else
+		uses the test file correspondent to args[1]
+	endif
+
+	open_file()
+
+	while every line of PrefixTable haven't been read 
+
+		reads the prefix and the correspondent next_hop
+
+		calls InsertPrefix(prefix, next_hop) that returns the root of the updated tree
+
+		moves to the next line
+
+	endwhile
+
+	closes_file()
+
+	return root of the prefix tree
+}
+
+Na função PrefixTree é lida a tabela de prefixos que contém todos os prefixos e os correspondentes
+routers ao quais encaminhar a informação e converte-a para uma prefix Tree. De forma a facilitar o 
+processo de teste do programa decidimos utilizar um ficheiro com o nome PrefixTable.txt como ficheiro de 
+teste default, no entanto caso seja fornecido um ficheiro teste como argumento do programa este terá prioridade
+em relação ao default. 
+O algoritmo da função consiste em percorrer todas as linhas da tabela e em cada ciclo do while chamar a 
+função do InsertPrefix para inserir o prefixo e o next hop correspondente num novo vértice.
+A complexidade temporal deste algoritmo desta função é O(n), sendo 'n' o nº de linhas de tabela ou o número de 
+prefixos a inserir na prefix Tree. Se considerarmos o processo de inserir na tree parte desta função, então a sua
+complexidade temporal, no pior caso, seria O(n*m), ou seja, o nº de operações necessárias para gerar uma prefix 
+tree a partir de uma prefix table é o nº de linhas da tabela vezes o tamanho máximo de um prefixo (16 bits).
+
+
+// n is used to iterate through the prefix string 
+
+PrintTableEven( root_twobit, current_node, prefix, n) {
+
+	if current_node = root_twobit and root_twobit->next_hop != -1 then
+		print( 'e' + current_node->next_hop )
+	endif
+
+	if current_node != root_twobit and current_node->next_hop != -1 then
+		print( prefix + current_node->next_hop )
+	endif 
+
+	if current_node->child_00 exists then 
+
+		append 00 to prefix string
+
+		PrintTableEven(root, current_node->child_00, aux, n)
+	endif
+
+	if (current_node->child_01 exists)
+		
+		appends 01 to prefix string
+
+		PrintTableEven(root, current_node->child_01, aux, n)
+	endif
+
+	if (current_node->child_10 exists)
+
+		appends 10 to prefix string
+
+		PrintTableEven(root, current_node->child_10, aux, n)
+	endif
+
+	if (current_node->child_11 exists)
+		
+		appends 11 to prefix string
+
+		PrintTableEven(root, current_node->child_11, aux, n)
+	endif
+
+	cleans the last two bits of prefix string
+
+	return
+}	
+
+O algoritmo da função PrefixTableEven é muito idêntico ao da função PrintTable à exceção 
+de que neste caso a string auxiliar que regista o prefixo percorrido é iterada de dois em dois
+bits.
+A complexidade temporal deste algoritmo é igual ao do algoritmo da função PrintTable, ou seja, 
+O(), uma vez que para a tabela ser impressa é necessário percorrer toda a árvore para 
+procurar vértices com valores de next hop válidos (neste caso diferente de -1).
+
+
+
+
+
+
+
+
