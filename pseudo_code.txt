@@ -169,12 +169,67 @@ InsertTwoBit(root_twobit, prefix, next_hop) {
 		return root_twobit
 	endif 
 
-	
-	
+	if prefix == 'e' then
+		root_twobit->next_hop = next_hop
 
+		return root_twobit
+	endif 
 
+	aux_node = root_twobit
 
+	for(from first bit of prefix ; to the end of prefix; moves two in two bits )
+
+		if these two bits are '00' then
+			if aux_node->child_00 exists then
+				aux_node = aux_node->child_00
+			else
+				create&initializeNode(aux_node)
+			 	aux_node = aux_node->child_00
+			endif
+		endif
+
+		if these two bits are '01' then
+			if aux_node->child_01 exists then
+				aux_node = aux_node->child_01
+			else
+				create&initializeNode(aux_node)
+			 	aux_node = aux_node->child_01
+			endif
+		endif
+
+		if these two bits are '10' then
+			if aux_node->child_10 exists then
+				aux_node = aux_node->child_10
+			else
+				create&initializeNode(aux_node)
+			 	aux_node = aux_node->child_10
+			endif
+		endif
+
+		if these two bits are '11' then
+			if aux_node->child_11 exists then
+				aux_node = aux_node->child_11
+			else
+				create&initializeNode(aux_node)
+			 	aux_node = aux_node->child_11
+			endif
+		endif
+
+	endfor 
+
+	aux->next_hop = next_hop	
+
+	return root_twobit
 }
+
+Logic of the algorithm very similar to the InsertPrefix.
+A operação de inserção percorre sempre o número de ciclos do loop for correspondente ao tamanho (nº de bits) 
+do prefixo, ou seja, a complexidade temporal deste algoritmo é O(m), em que "m" é o tamanho do prefixo.
+Quanto à complexidade do espaço pode-se concluir que, no pior caso, a complexidade é, também, O(m), uma vez
+que pode ocorrer a situação em que nenhum vértice da árvore corresponde à sequência de bits do prefixo e nesse 
+caso deverão ser criados m vértices novos.
+
+
 
 
 
