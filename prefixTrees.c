@@ -98,7 +98,8 @@ int LookUp(struct Node *current_node, char prefix[PREFIXSIZE], int *next_hop, in
 		(*next_hop) = current_node->next_hop;
 		
 
-	//a cada chamada compara-se cada caracter do prefixo, para se decidir se se avança pelo child one
+	//a cada chamada compara-se cada caracter do prefixo, para se decidir se se avança pelo child one ou zero
+	//a cada chamada avança-se uma posição no prefixo até se chegar ao fim
 	if ((*tree_level) < strlen(prefix) ) {
 
 		if (current_node->child_zero != NULL && prefix[*tree_level] == '0') {
