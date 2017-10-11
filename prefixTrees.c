@@ -188,6 +188,7 @@ struct Node* DeletePrefix(struct Node *root, char prefix[PREFIXSIZE], char *bina
 		}
 	}
 
+
 	// if the node correspondent to the prefix that must be deleted is a leaf, then we free it from our tree
 	if(root->child_zero == NULL && root->child_one == NULL && root->next_hop == -1){
 		free(root);
