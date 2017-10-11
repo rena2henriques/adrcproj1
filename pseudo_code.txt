@@ -162,8 +162,9 @@ O(), uma vez que para a tabela ser impressa é necessário percorrer toda a árv
 procurar vértices com valores de next hop válidos (neste caso diferente de -1).
 
 
+InsertTwoBit(root_twobit, prefix, next_hop) {
 
-
+	
 
 
 

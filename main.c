@@ -3,6 +3,7 @@
 #include <string.h>
 #include "prefixTrees.h"
 
+
 int main(int argc, char const *argv[])
 {	
 	char temp[50] = "";
@@ -78,7 +79,7 @@ int main(int argc, char const *argv[])
 			root_two = BinaryToTwoBit(root, root, root_two, &tree_level_two, prefix_two, &binary_level_two, &relevant_hop);
 			tree_level_two = -1;
 			memset(prefix_two, 0, sizeof(prefix_two));
-			PrintTableEven(root_two, root_two, prefix_two, &tree_level_two);
+			PrintTableEven(root_two, prefix_two, &tree_level_two);
 		}
 		
 		else if( sscanf(temp, "%s", address) == 1) {

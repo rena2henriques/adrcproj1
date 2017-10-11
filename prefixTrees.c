@@ -433,23 +433,19 @@ struct TwoBitNode* InsertTwoBit(struct TwoBitNode *root_two, char prefix[PREFIXS
 
 
 // n is used to iterate through aux string
-void PrintTableEven(struct TwoBitNode *root, struct TwoBitNode *current_node, char aux[PREFIXSIZE], int *n ) {
+void PrintTableEven(struct TwoBitNode *root, char aux[PREFIXSIZE], int *n ) {
 
 	// always prints if the next_hop of the node is different than -1
-	if(current_node != root ){
-		if(current_node->next_hop != -1) {
-			printf("%s %d\n", aux, current_node->next_hop);
+	if(root->next_hop != -1) {
+		if ( (*n) == -1 ) {
+			// case that the root corresponds to the empty address
+			printf("e %d\n", root->next_hop);
+		} else {
+			printf("%s %d\n", aux, root->next_hop);
 		}
 	}
 
-	// case that the root corresponds to the empty address
-	if(current_node == root ){
-		if(current_node->next_hop != -1) {
-			printf("e %d\n", current_node->next_hop);
-		}
-	}
-
-	if (current_node->child_00 != NULL) {
+	if (root->child_00 != NULL) {
 
 		// apends 00 to aux string
 		(*n)++;
@@ -457,10 +453,10 @@ void PrintTableEven(struct TwoBitNode *root, struct TwoBitNode *current_node, ch
 		(*n)++;
 		aux[(*n)] = '0';
 
-		PrintTableEven(root, current_node->child_00, aux, n);
+		PrintTableEven(root->child_00, aux, n);
 	}
 
-	if (current_node->child_01 != NULL) {
+	if (root->child_01 != NULL) {
 
 		// apends 01 to aux string
 		(*n)++;
@@ -468,10 +464,10 @@ void PrintTableEven(struct TwoBitNode *root, struct TwoBitNode *current_node, ch
 		(*n)++;
 		aux[(*n)] = '1';
 
-		PrintTableEven(root, current_node->child_01, aux, n);
+		PrintTableEven(root->child_01, aux, n);
 	}
 	
-	if (current_node->child_10 != NULL) {
+	if (root->child_10 != NULL) {
 
 		// appends 10 to aux string
 		(*n)++;
@@ -479,10 +475,10 @@ void PrintTableEven(struct TwoBitNode *root, struct TwoBitNode *current_node, ch
 		(*n)++;
 		aux[(*n)] = '0';
 
-		PrintTableEven(root, current_node->child_10, aux, n);
+		PrintTableEven(root->child_10, aux, n);
 	}
 	
-	if (current_node->child_11 != NULL) {
+	if (root->child_11 != NULL) {
 
 		// apends 11 to aux string
 		(*n)++;
@@ -490,7 +486,7 @@ void PrintTableEven(struct TwoBitNode *root, struct TwoBitNode *current_node, ch
 		(*n)++;
 		aux[(*n)] = '1';
 
-		PrintTableEven(root, current_node->child_11, aux, n);
+		PrintTableEven(root->child_11, aux, n);
 	}
 	
 	// cleans the last two bits
