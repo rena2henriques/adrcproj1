@@ -91,30 +91,23 @@ struct Node *PrefixTree(int argc, char const *argv[]) {
 	return root;
 }
 
-int LookUp(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE], int *next_hop, int *tree_level) {
+int LookUp(struct Node *current_node, char prefix[PREFIXSIZE], int *next_hop, int *tree_level) {
+	
+	//se for um next-hop relevante guarda-o, até ao próximo filho com next-hop relevante (mais especifico)
+	if(current_node->next_hop != -1)
+		(*next_hop) = current_node->next_hop;
+		
 
-	if(current_node != root ){
-		if(current_node->next_hop != -1) {
-			(*next_hop) = current_node->next_hop;
-		}
-	}
-
-
-	// caso em que a root tem uma empty address
-	if(current_node == root && root->next_hop != -1) {
-		(*next_hop) = root->next_hop;
-	}
-
-
+	//a cada chamada compara-se cada caracter do prefixo, para se decidir se se avança pelo child one
 	if ((*tree_level) < strlen(prefix) ) {
 
 		if (current_node->child_zero != NULL && prefix[*tree_level] == '0') {
 			(*tree_level)++;
-			LookUp(root, current_node->child_zero, prefix, next_hop, tree_level);
+			LookUp(current_node->child_zero, prefix, next_hop, tree_level);
 		} 
 		else if (current_node->child_one != NULL && prefix[(*tree_level)] == '1') {
 			(*tree_level)++;
-			LookUp(root, current_node->child_one,prefix, next_hop, tree_level);
+			LookUp(current_node->child_one,prefix, next_hop, tree_level);
 
 		}
 	}
@@ -432,15 +425,18 @@ struct TwoBitNode* InsertTwoBit(struct TwoBitNode *root_two, char prefix[PREFIXS
 	return root_two;
 }
 
-void PrintTableEven(struct TwoBitNode *root, struct TwoBitNode *current_node, char *binary_level, char aux[PREFIXSIZE], int *tree_level ) {
 
+// n is used to iterate through aux string
+void PrintTableEven(struct TwoBitNode *root, struct TwoBitNode *current_node, char aux[PREFIXSIZE], int *n ) {
+
+	// always prints if the next_hop of the node is different than -1
 	if(current_node != root ){
 		if(current_node->next_hop != -1) {
 			printf("%s %d\n", aux, current_node->next_hop);
 		}
 	}
 
-	// caso em que a root tem uma empty address
+	// case that the root corresponds to the empty address
 	if(current_node == root ){
 		if(current_node->next_hop != -1) {
 			printf("e %d\n", current_node->next_hop);
@@ -448,52 +444,54 @@ void PrintTableEven(struct TwoBitNode *root, struct TwoBitNode *current_node, ch
 	}
 
 	if (current_node->child_00 != NULL) {
-		(*tree_level)++;
-		(*binary_level) = '0';
-		aux[(*tree_level)] = *binary_level;
-		(*tree_level)++;
-		(*binary_level) = '0';
-		aux[(*tree_level)] = *binary_level;
-		PrintTableEven(root, current_node->child_00, binary_level, aux, tree_level);
+
+		// apends 00 to aux string
+		(*n)++;
+		aux[(*n)] = '0';
+		(*n)++;
+		aux[(*n)] = '0';
+
+		PrintTableEven(root, current_node->child_00, aux, n);
 	}
 
 	if (current_node->child_01 != NULL) {
-		(*tree_level)++;
-		(*binary_level) = '0';
-		aux[(*tree_level)] = *binary_level;
-		(*tree_level)++;
-		(*binary_level) = '1';
-		aux[(*tree_level)] = *binary_level;
-		PrintTableEven(root, current_node->child_01, binary_level, aux, tree_level);
 
+		// apends 01 to aux string
+		(*n)++;
+		aux[(*n)] = '0';
+		(*n)++;
+		aux[(*n)] = '1';
+
+		PrintTableEven(root, current_node->child_01, aux, n);
 	}
 	
 	if (current_node->child_10 != NULL) {
-		(*tree_level)++;
-		(*binary_level) = '1';
-		aux[(*tree_level)] = *binary_level;
-		(*tree_level)++;
-		(*binary_level) = '0';
-		aux[(*tree_level)] = *binary_level;
-		PrintTableEven(root, current_node->child_10, binary_level, aux, tree_level);
 
+		// appends 10 to aux string
+		(*n)++;
+		aux[(*n)] = '1';
+		(*n)++;
+		aux[(*n)] = '0';
+
+		PrintTableEven(root, current_node->child_10, aux, n);
 	}
 	
 	if (current_node->child_11 != NULL) {
-		(*tree_level)++;
-		(*binary_level) = '1';
-		aux[(*tree_level)] = *binary_level;
-		(*tree_level)++;
-		(*binary_level) = '1';
-		aux[(*tree_level)] = *binary_level;
-		PrintTableEven(root, current_node->child_11, binary_level, aux, tree_level);
 
+		// apends 11 to aux string
+		(*n)++;
+		aux[(*n)] = '1';
+		(*n)++;
+		aux[(*n)] = '1';
+
+		PrintTableEven(root, current_node->child_11, aux, n);
 	}
 	
-	aux[(*tree_level)] = '\0';
-	(*tree_level)--;
-	aux[(*tree_level)] = '\0';
-	(*tree_level)--;
+	// cleans the last two bits
+	aux[(*n)] = '\0';
+	(*n)--;
+	aux[(*n)] = '\0';
+	(*n)--;
 
 	return;
 }
