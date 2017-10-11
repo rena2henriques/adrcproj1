@@ -152,6 +152,15 @@ void PrintTable(struct Node *root, struct Node *current_node, char *binary_level
 	return;
 }
 
+/**
+ * Descrição da função:
+ * 
+ * Caso o prefixo que se deseja apagar não seja uma folha, basta mudar o next hop do vertice correspondente para -1, o restante
+ * programa interpretará esse vértice como irrelevante, ou seja, faz apenas parte de um caminho para um vértice relevante
+ * 
+ * Caso seja uma folha, esse vértice é libertado da memória, e caso existam, os seus ascendentes irrelevante (com next_hop igual a -1)
+ * são libertado até ao seu primeiro ascendente relevante**/
+ 
 struct Node* DeletePrefix(struct Node *root, char prefix[PREFIXSIZE], char *binary_level, char aux[PREFIXSIZE], int *tree_level) {
 
 	if ((*tree_level) > 0) {
@@ -163,10 +172,14 @@ struct Node* DeletePrefix(struct Node *root, char prefix[PREFIXSIZE], char *bina
 		root->next_hop = -1;
 	}
 
+	//quando se chega ao vertice a apagar, muda-se o next_hop para -1
 	if (strcmp(aux, prefix) == 0) {
 		root->next_hop = -1;
 	}
-
+	
+	//comparar o caractere do prefixo que se quer apagar, para se decidir a proxima chamada da função é pelo child zero ou one
+	//compara-se a posição do prefixo corresponde ao nivel da arvore em que o nó se encontra
+	//a variavel aux guarda o prefixo total que se percorreu até agora
 	if (strcmp(prefix, aux) != 0 && root != NULL && strcmp(prefix, "e") != 0) {
 
 		if (root->child_zero != NULL && prefix[*tree_level] == '0') {
