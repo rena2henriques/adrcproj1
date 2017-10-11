@@ -91,30 +91,24 @@ struct Node *PrefixTree(int argc, char const *argv[]) {
 	return root;
 }
 
-int LookUp(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE], int *next_hop, int *tree_level) {
+int LookUp(struct Node *current_node, char prefix[PREFIXSIZE], int *next_hop, int *tree_level) {
+	
+	//se for um next-hop relevante guarda-o, até ao próximo filho com next-hop relevante (mais especifico)
+	if(current_node->next_hop != -1)
+		(*next_hop) = current_node->next_hop;
+		
 
-	if(current_node != root ){
-		if(current_node->next_hop != -1) {
-			(*next_hop) = current_node->next_hop;
-		}
-	}
-
-
-	// caso em que a root tem uma empty address
-	if(current_node == root && root->next_hop != -1) {
-		(*next_hop) = root->next_hop;
-	}
-
-
+	//a cada chamada compara-se cada caracter do prefixo, para se decidir se se avança pelo child one ou zero
+	//a cada chamada avança-se uma posição no prefixo até se chegar ao fim
 	if ((*tree_level) < strlen(prefix) ) {
 
 		if (current_node->child_zero != NULL && prefix[*tree_level] == '0') {
 			(*tree_level)++;
-			LookUp(root, current_node->child_zero, prefix, next_hop, tree_level);
+			LookUp(current_node->child_zero, prefix, next_hop, tree_level);
 		} 
 		else if (current_node->child_one != NULL && prefix[(*tree_level)] == '1') {
 			(*tree_level)++;
-			LookUp(root, current_node->child_one,prefix, next_hop, tree_level);
+			LookUp(current_node->child_one,prefix, next_hop, tree_level);
 
 		}
 	}
@@ -158,6 +152,15 @@ void PrintTable(struct Node *root, struct Node *current_node, char *binary_level
 	return;
 }
 
+/**
+ * Descrição da função:
+ * 
+ * Caso o prefixo que se deseja apagar não seja uma folha, basta mudar o next hop do vertice correspondente para -1, o restante
+ * programa interpretará esse vértice como irrelevante, ou seja, faz apenas parte de um caminho para um vértice relevante
+ * 
+ * Caso seja uma folha, esse vértice é libertado da memória, e caso existam, os seus ascendentes irrelevante (com next_hop igual a -1)
+ * são libertado até ao seu primeiro ascendente relevante**/
+ 
 struct Node* DeletePrefix(struct Node *root, char prefix[PREFIXSIZE], char *binary_level, char aux[PREFIXSIZE], int *tree_level) {
 
 	if ((*tree_level) > 0) {
@@ -169,10 +172,14 @@ struct Node* DeletePrefix(struct Node *root, char prefix[PREFIXSIZE], char *bina
 		root->next_hop = -1;
 	}
 
+	//quando se chega ao vertice a apagar, muda-se o next_hop para -1
 	if (strcmp(aux, prefix) == 0) {
 		root->next_hop = -1;
 	}
-
+	
+	//comparar o caractere do prefixo que se quer apagar, para se decidir a proxima chamada da função é pelo child zero ou one
+	//compara-se a posição do prefixo corresponde ao nivel da arvore em que o nó se encontra
+	//a variavel aux guarda o prefixo total que se percorreu até agora
 	if (strcmp(prefix, aux) != 0 && root != NULL && strcmp(prefix, "e") != 0) {
 
 		if (root->child_zero != NULL && prefix[*tree_level] == '0') {
@@ -187,6 +194,7 @@ struct Node* DeletePrefix(struct Node *root, char prefix[PREFIXSIZE], char *bina
 
 		}
 	}
+
 
 	// if the node correspondent to the prefix that must be deleted is a leaf, then we free it from our tree
 	if(root->child_zero == NULL && root->child_one == NULL && root->next_hop == -1){
@@ -422,6 +430,7 @@ struct TwoBitNode* InsertTwoBit(struct TwoBitNode *root_two, char prefix[PREFIXS
 
 
 // n is used to iterate through aux string
+
 void PrintTableEven(struct TwoBitNode *root, char aux[PREFIXSIZE], int *n ) {
 
 	// always prints if the next_hop of the node is different than -1
@@ -436,11 +445,13 @@ void PrintTableEven(struct TwoBitNode *root, char aux[PREFIXSIZE], int *n ) {
 
 	if (root->child_00 != NULL) {
 
+
 		// apends 00 to aux string
 		(*n)++;
 		aux[(*n)] = '0';
 		(*n)++;
 		aux[(*n)] = '0';
+
 
 		PrintTableEven(root->child_00, aux, n);
 	}
@@ -458,6 +469,7 @@ void PrintTableEven(struct TwoBitNode *root, char aux[PREFIXSIZE], int *n ) {
 	
 	if (root->child_10 != NULL) {
 
+
 		// appends 10 to aux string
 		(*n)++;
 		aux[(*n)] = '1';
@@ -469,13 +481,16 @@ void PrintTableEven(struct TwoBitNode *root, char aux[PREFIXSIZE], int *n ) {
 	
 	if (root->child_11 != NULL) {
 
+
 		// apends 11 to aux string
 		(*n)++;
 		aux[(*n)] = '1';
 		(*n)++;
 		aux[(*n)] = '1';
 
+
 		PrintTableEven(root->child_11, aux, n);
+
 	}
 	
 	// cleans the last two bits

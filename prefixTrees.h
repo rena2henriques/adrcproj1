@@ -29,7 +29,7 @@ struct Node* PrefixTree(int argc, char const *argv[]);
 
 void PrintTable(struct Node *root, struct Node *current_node, char *binary_level, char aux[PREFIXSIZE], int *tree_level );
 
-int LookUp(struct Node *root, struct Node *current_node, char prefix[PREFIXSIZE], int *next_hop, int *tree_level);
+int LookUp(struct Node *current_node, char prefix[PREFIXSIZE], int *next_hop, int *tree_level);
 
 struct Node* DeletePrefix(struct Node *root, char prefix[PREFIXSIZE], char *binary_level, char aux[PREFIXSIZE], int *tree_level);
 
@@ -41,6 +41,7 @@ struct TwoBitNode* BinaryToTwoBit(struct Node *root, struct TwoBitNode *root_two
 struct TwoBitNode* InsertTwoBit(struct TwoBitNode *root_two, char prefix[PREFIXSIZE], int next_hop);
 
 void PrintTableEven(struct TwoBitNode *root, char aux[PREFIXSIZE], int *n );
+
 
 struct TwoBitNode * FreeTwoBitPrefixTree(struct TwoBitNode *root_two);
 

@@ -162,6 +162,12 @@ O(), uma vez que para a tabela ser impressa é necessário percorrer toda a árv
 procurar vértices com valores de next hop válidos (neste caso diferente de -1).
 
 
+<<<<<<< HEAD
+
+
+
+
+=======
 InsertTwoBit(root_twobit, prefix, next_hop) {
 
 	if root_twobit doesnt exist then
@@ -232,5 +238,6 @@ caso deverão ser criados m vértices novos.
 
 
 
+>>>>>>> 5e6810b08bfb6b63a2800c1b6d4b5631afb867d6
 
 

@@ -45,7 +45,7 @@ int main(int argc, char const *argv[])
 		else if( (sscanf(temp, "%d %s", &user_choice, address) == 2) && user_choice == 2) {
 			tree_level = 0;
 			next_hop = -1; //input em LookUp
-			next_hop = LookUp(root, root, address, &next_hop, &tree_level);
+			next_hop = LookUp(root, address, &next_hop, &tree_level);
 			if (next_hop == -1 ) {
 				printf("There's no available next_hop value for that prefix!\n");
 			} else {
@@ -57,7 +57,7 @@ int main(int argc, char const *argv[])
 			//confirmar a inserção
 			tree_level = 0;
 			next_hop = -1;
-			if (LookUp(root, root, prefix_input, &next_hop, &tree_level) == next_hop_input) { // this line might be useless
+			if (LookUp(root, prefix_input, &next_hop, &tree_level) == next_hop_input) { // this line might be useless
 				printf("Prefix successfully inserted\n");
 			} else {
 				printf("Ocorreu um erro na inserção\n");
@@ -77,7 +77,9 @@ int main(int argc, char const *argv[])
 			root_two = BinaryToTwoBit(root, root_two, &tree_level_two, prefix_two);
 			tree_level_two = -1;
 			memset(prefix_two, 0, sizeof(prefix_two));
+
 			PrintTableEven(root_two, prefix_two, &tree_level_two);
+
 		}
 		
 		else if( sscanf(temp, "%s", address) == 1) {
