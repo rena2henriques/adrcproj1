@@ -3,6 +3,11 @@
 #include <string.h>
 #include "prefixTrees.h"
 
+/*****************************************************************************/
+/*               Algoritmia e Desempenho em Redes de Computadores            */
+/*		       		Prefix Trees and Longest Prefix Matching				 */
+/*                      Paulo Eusébio & Renato Henriques                     */
+/*****************************************************************************/
 
 int main(int argc, char const *argv[])
 {	

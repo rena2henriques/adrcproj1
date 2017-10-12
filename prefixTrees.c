@@ -1,6 +1,14 @@
 #include "prefixTrees.h"
 #include "utils.h"
 
+
+/**
+ * Descrição da função:
+ * A função recebe como argumentos, um prefixo, o seu correspondente next-hop, e a raiz da PrefixTree
+ * Analisa o prefixo, caractere a caractere, avançando na árvore pelo child zero ou one, caso seja 1 ou 0
+ * Avança-se até chegar ao ultimo caractere do prefixo, caso não existam os vértices intermédios necessários, eles são criados
+ * com next hop igual a -1. **/
+
 struct Node* InsertPrefix(char prefix[PREFIXSIZE], int next_hop, struct Node *root) {
 
 	int n = 0; /* index of the bit on the prefix string*/
@@ -16,8 +24,10 @@ struct Node* InsertPrefix(char prefix[PREFIXSIZE], int next_hop, struct Node *ro
 
 		if (prefix[n] == '0') {
 			if (aux->child_zero != NULL) {
+				//there's already a node that allows to advance
 				aux = aux->child_zero;
 			} else {
+				//creates the necessary node to get to the end of the prefix
 				aux->child_zero = (struct Node*) mymalloc( sizeof(struct Node));
 				aux = aux->child_zero;
 				aux->next_hop = -1;
@@ -27,8 +37,10 @@ struct Node* InsertPrefix(char prefix[PREFIXSIZE], int next_hop, struct Node *ro
 
 		} else if (prefix[n] == '1') {
 			if (aux->child_one != NULL) {
+				//there's already a node that allows to advance
 				aux = aux->child_one;
 			} else {
+				//creates the necessary node to get to the end of the prefix
 				aux->child_one = (struct Node*) mymalloc( sizeof(struct Node));
 				aux = aux->child_one;
 				aux->next_hop = -1;
@@ -44,6 +56,8 @@ struct Node* InsertPrefix(char prefix[PREFIXSIZE], int next_hop, struct Node *ro
 	return root;
 }
 
+/**Descrição da função:
+ * Função que lê a informação de um ficheiro linha a linha, e atualiza a árvore.**/
 
 struct Node *PrefixTree(int argc, char const *argv[]) {
 	
@@ -116,9 +130,14 @@ int LookUp(struct Node *current_node, char prefix[PREFIXSIZE], int *next_hop, in
 	return (*next_hop);
 }
 
+/**
+ * Descrição da função:
+ * Percorre todos os vértices da árovre e imprime o prefixo correspondente e o seu next hop (caso seja diferente de -1)
+ * A string aux mantém o prefixo total correspondente ao vértice em que a função se encontra**/
 
 void PrintTable(struct Node *root, struct Node *current_node, char *binary_level, char aux[PREFIXSIZE], int *tree_level ) {
 
+	//prints the info if next hop isnt -1
 	if(current_node != root ){
 		aux[(*tree_level)] = *binary_level;
 		if(current_node->next_hop != -1) {
@@ -136,16 +155,18 @@ void PrintTable(struct Node *root, struct Node *current_node, char *binary_level
 	if (current_node->child_zero != NULL) {
 		(*tree_level)++;
 		(*binary_level) = '0';
+		//the info is printed upon entering the function again
 		PrintTable(root, current_node->child_zero, binary_level, aux, tree_level);
 	}
 
 	if (current_node->child_one != NULL) {
 		(*tree_level)++;
 		(*binary_level) = '1';
+		//the info is printed upon entering the function again
 		PrintTable(root, current_node->child_one, binary_level, aux, tree_level);
-
 	}
 	
+	//when we get here, the node is a leaf, the function will return clears the last bit aux string 
 	aux[(*tree_level)] = '\0';
 	(*tree_level)--;
 
@@ -205,7 +226,8 @@ struct Node* DeletePrefix(struct Node *root, char prefix[PREFIXSIZE], char *bina
 	return root;
 }
 
-
+/**Descrição da função:
+ * Liberta toda a memória de forma recursiva, em profundidade primeiro **/
 struct Node * FreePrefixTree(struct Node *root) {
 	
 	if (root == NULL){
@@ -333,6 +355,13 @@ struct TwoBitNode* BinaryToTwoBit(struct Node *root, struct TwoBitNode *root_two
 	return root_two;
 }
 
+/**
+ * Descrição da função:
+ * Funciona de forma identica à InsertPrefix
+ * Analisa o prefixo, dois em dois caracteres, avançando consoante a comparação
+ * Avança-se até chegar ao ultimo caractere do prefixo, caso não existam os vértices intermédios necessários, eles são criados
+ * com next hop igual a -1. **/
+
 struct TwoBitNode* InsertTwoBit(struct TwoBitNode *root_two, char prefix[PREFIXSIZE], int next_hop) {
 
 	int n = 0; /* index of the prefix string*/
@@ -428,11 +457,12 @@ struct TwoBitNode* InsertTwoBit(struct TwoBitNode *root_two, char prefix[PREFIXS
 	return root_two;
 }
 
-
-// n is used to iterate through aux string
+/**Descrição da função:
+ * Funciona de forma idêntica à função PrintTable, neste caso a string auxiliar que regista o prefixo 
+ * percorrido é iterada de dois em dois bits. **/
 
 void PrintTableEven(struct TwoBitNode *root, char aux[PREFIXSIZE], int *n ) {
-
+	// n is used to iterate through aux string
 	// always prints if the next_hop of the node is different than -1
 	if(root->next_hop != -1) {
 		if ( (*n) == -1 ) {
@@ -493,7 +523,7 @@ void PrintTableEven(struct TwoBitNode *root, char aux[PREFIXSIZE], int *n ) {
 
 	}
 	
-	// cleans the last two bits
+	// cleans the last two bits to return to the ascendent node
 	aux[(*n)] = '\0';
 	(*n)--;
 	aux[(*n)] = '\0';
@@ -501,6 +531,9 @@ void PrintTableEven(struct TwoBitNode *root, char aux[PREFIXSIZE], int *n ) {
 
 	return;
 }
+
+/**Descrição da função:
+ * Liberta toda a memória de forma recursiva, em profundidade primeiro **/
 
 struct TwoBitNode * FreeTwoBitPrefixTree(struct TwoBitNode *root_two) {
 	
