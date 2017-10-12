@@ -105,6 +105,12 @@ struct Node *PrefixTree(int argc, char const *argv[]) {
 	return root;
 }
 
+/**
+ * Descrição da função:
+ * Recebe-se o prefixo para o qual se quer encontrar o next hop
+ * Compara-se caractere a caractere e avança-se pelo child zero ou one conforme seja 0 ou 1, até total matching ou uma folha
+ * Se for uma folha e o prefixo ainda não acabou, significa que essa folha tem o next hop mais especifico**/
+
 int LookUp(struct Node *current_node, char prefix[PREFIXSIZE], int *next_hop, int *tree_level) {
 	
 	//se for um next-hop relevante guarda-o, até ao próximo filho com next-hop relevante (mais especifico)
